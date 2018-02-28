@@ -1,1 +1,2 @@
-# EetApp
+# webapp_template
+school assignment
