@@ -8,7 +8,7 @@ module.exports = function (grunt) {
                     collapseWhitespace: true
                 },
                 files: {                                   // Dictionary of files
-                    'dist/index.html': 'src/index.html'     // 'destination': 'source'
+                    'dist/index.html': 'src/index.php'     // 'destination': 'source'
                 }
             }
         },

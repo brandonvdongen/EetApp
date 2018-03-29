@@ -1,3 +1,17 @@
+<?php
+require_once "php/session.php";
+require_once "classes/database.class.php";
+require_once "classes/auth.class.php";
+
+$database = new Database();
+$auth = new Auth($database);
+
+if (!$auth->verify_login()) {
+    header('Location: php/login.php');
+}
+
+?>
+
 <!doctype html>
 <html lang="nl">
 <head>
@@ -11,6 +25,11 @@
     <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
-
+<div class="container">
+    <nav>
+        <div class="menu_button"></div>
+    </nav>
+    <div class="body"></div>
+</div>
 </body>
 </html>

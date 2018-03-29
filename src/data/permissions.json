@@ -1,0 +1,10 @@
+{
+  "user management": {
+    "USER_VIEW": "view users",
+    "USER_ADD": "add new user",
+    "USER_MODIFY": "modify existing users",
+    "USER_REMOVE": "delete existing users",
+    "USER_RESET_PASSWORD": "reset user passwords",
+    "USER_PERMISSIONS": "edit user permissions"
+  }
+}
