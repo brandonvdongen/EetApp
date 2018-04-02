@@ -13,14 +13,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    echo print_r($_POST);
     if ($_POST["type"] === "login") {
         $result = $auth->login($_POST["username"], $_POST["password"]);
         if ($result->error) {
             echo $result->error;
         }
     } else if ($_POST["type"] === "register") {
-        $user = $auth->add_user($_POST["username"]);
+        $user = $auth->add_user($_POST["username"], $_POST["email"], $_POST["password"]);
         print_r($user);
     }
 }

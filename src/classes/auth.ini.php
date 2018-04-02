@@ -1,8 +1,8 @@
 ;<?php
 ;die(); // For further security, prevents browser navigation of config
 ;/*
-    username = "root"
-	password = "root"
+    username = "eetapp"
+	password = "IoKmac72h4RDZap0"
 	database = "eetapp"
     host = "localhost"
 

@@ -94,7 +94,7 @@ class Auth
     public function has_permission($array, $all = false) {
         $result = $all;
         $permissions = $this->get_permissions();
-        if(in_array("ADMIN",$permissions))return true;
+        if (in_array("ADMIN", $permissions)) return true;
         foreach ($array as $permission) {
             if ($all) {
                 if (!in_array($permission, $permissions)) {
@@ -106,7 +106,7 @@ class Auth
                 }
             }
         }
-        if($result)return 1;
+        if ($result) return 1;
         else return 0;
 
     }
@@ -115,7 +115,7 @@ class Auth
         if ($this->verify_login()) {
             $permissions = [];
             $result = $this->database->prepared_query("SELECT `permission` FROM permissions WHERE id_user=?", [$this->get_id()]);
-            if(!$result)return [];
+            if (!$result) return [];
             foreach ($result as $k => $v) {
                 $permissions[] = $v->permission;
             }
@@ -126,24 +126,24 @@ class Auth
         }
     }
 
-    public function add_user($username) {
+    public function add_user($username, $email, $password) {
         $output = new stdClass();
         $output->success = true;
         $output->error = "none";
-        if (filter_var($username, FILTER_VALIDATE_EMAIL)) {
-            $password = $this->generate_password();
-            $result = $this->database->prepared_query("SELECT * FROM users WHERE users.email=?", [$username])[0];
-            if (!$result) {
-                $this->database->prepared_query("INSERT INTO users (email, password) VALUES (?, ?);", [$username, $password->hash]);
-                $email_check = $this->database->prepared_query("SELECT * FROM users WHERE email=?", [$username])[0];
-                if ($email_check) {
-                    $this->database->prepared_query("INSERT INTO permissions (permissions.id_user) VALUES (?);", [$email_check->id]);
-                }
-                $output->password = $password->string;
+        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $password = password_hash($password, PASSWORD_DEFAULT);
+            $check_username = $this->database->prepared_query("SELECT * FROM users WHERE users.username=?", [$username])[0];
+            $check_email = $this->database->prepared_query("SELECT * FROM users WHERE users.email=?", [$email])[0];
+            if (!($check_email || $check_username)) {
+                $this->database->prepared_query("INSERT INTO users (username, email, password) VALUES (?, ?, ?);", [$username, $email, $password]);
+
+                $output->password = $password;
                 $output->username = $username;
                 return $output;
             } else {
                 $output->error = "USER_ALREADY_EXISTS";
+                $output->username = ($check_username != false);
+                $output->email = ($check_email != false);
                 $output->success = false;
                 return $output;
             }

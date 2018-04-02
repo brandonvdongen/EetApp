@@ -95,7 +95,7 @@ class Database
     }
 
     public function set_user_details($data) {
-        $result = $this->prepared_query("UPDATE users SET username=?, displayname=?, email=?, UUID=? WHERE id=?", [$data["username"], $data["displayname"], $data["email"], $data["uuid"], $data["id"]]);
+        $result = $this->prepared_query("UPDATE users SET username=?, displayname=?, email=? WHERE id=?", [$data["username"], $data["displayname"], $data["email"], $data["id"]]);
         if ($result) {
             return true;
         }
