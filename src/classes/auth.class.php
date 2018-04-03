@@ -9,7 +9,8 @@ class Auth
     private $username;
     private $displayname;
 
-    public function __construct($database) {
+    public function __construct($database)
+    {
         if ($database instanceof Database) {
             $this->database = $database;
         } else {
@@ -25,7 +26,8 @@ class Auth
         return true;
     }
 
-    public function verify_login() {
+    public function verify_login()
+    {
         if (isset($this->id_user)) {
             if (!is_numeric($id = $this->id_user)) {
                 return false;
@@ -45,7 +47,8 @@ class Auth
         }
     }
 
-    public function get_id() {
+    public function get_id()
+    {
         if (isset($this->id_user)) {
             return $this->id_user;
         } else {
@@ -54,15 +57,15 @@ class Auth
 
     }
 
-    public function login($username, $password) {
+    public function login($username, $password)
+    {
         $output = new stdClass();
         $result = $this->database->prepared_query("SELECT * FROM users WHERE email=? OR username=?", [$username, $username])[0];
         if ($result) {
-            $permissions = $this->database->prepared_query("SELECT * FROM permissions WHERE id_user", [$result->id])[0];
-            if ($result->attempt >= 3 && $permissions->admin === 0) {
+            if ($result->attempt >= 3 && !$this->database->user_has_permission($result->id, ["ADMIN"])) {
                 $output->error = "ACCOUNT_LOCKED";
                 $output->success = false;
-            } elseif (password_verify($password, $result->password)) {
+            } else if (password_verify($password, $result->password)) {
                 $_SESSION[self::SESSION_VAR] = $result->id;
                 $this->id_user = $result->id;
                 $this->email = $result->email;
@@ -75,9 +78,6 @@ class Auth
                 $this->database->prepared_query("UPDATE users SET users.attempt = users.attempt + 1 WHERE email=? OR username=?", [$username, $username]);
                 $output->error = "INVALID_PASSWORD";
                 $output->success = false;
-                if ($result->attempt >= 2 && $permissions->admin === 0) {
-                    $output->error = "ACCOUNT_LOCKED";
-                }
             }
 
         } else {
@@ -87,11 +87,13 @@ class Auth
         return $output;
     }
 
-    public function logout() {
+    public function logout()
+    {
         unset($_SESSION[self::SESSION_VAR]);
     }
 
-    public function has_permission($array, $all = false) {
+    public function has_permission($array, $all = false)
+    {
         $result = $all;
         $permissions = $this->get_permissions();
         if (in_array("ADMIN", $permissions)) return true;
@@ -111,7 +113,8 @@ class Auth
 
     }
 
-    public function get_permissions() {
+    public function get_permissions()
+    {
         if ($this->verify_login()) {
             $permissions = [];
             $result = $this->database->prepared_query("SELECT `permission` FROM permissions WHERE id_user=?", [$this->get_id()]);
@@ -126,7 +129,8 @@ class Auth
         }
     }
 
-    public function add_user($username, $email, $password) {
+    public function add_user($username, $email, $password)
+    {
         $output = new stdClass();
         $output->success = true;
         $output->error = "none";
@@ -155,7 +159,8 @@ class Auth
 
     }
 
-    public function generate_password() {
+    public function generate_password()
+    {
         $output = new stdClass();
         $output->success = true;
         $output->error = "none";
@@ -172,7 +177,8 @@ class Auth
         return $output;
     }
 
-    public function change_password($old_password, $new_password) {
+    public function change_password($old_password, $new_password)
+    {
 
         $output = new stdClass();
         $output->success = true;
@@ -208,21 +214,26 @@ class Auth
 
     }
 
-    public function set_password($password, $id) {
+    public function set_password($password, $id)
+    {
         $new_password = password_hash($password, PASSWORD_DEFAULT);
         $this->database->prepared_query("UPDATE users SET password=? WHERE id=?", [$new_password, $id]);
         return true;
     }
 
-    public function get_username() {
+    public function get_username()
+    {
         return $this->username;
     }
 
-    public function get_displayname() {
-        return $this->displayname;
+    public function get_displayname()
+    {
+        if ($this->displayname) return $this->displayname;
+        else return $this->username;
     }
 
-    public function get_full_name() {
+    public function get_full_name()
+    {
         $fullname = $this->displayname . "(" . $this->username . ")";
         return $fullname;
     }

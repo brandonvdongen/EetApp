@@ -23,11 +23,26 @@ if (!$auth->verify_login()) {
     <script src="js/index.js"></script>
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/index.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js"
+            integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl"
+            crossorigin="anonymous"></script>
 </head>
 <body>
 <div class="container">
     <nav>
-        <div class="menu_button"></div>
+        <div class="nametag"><?= $auth->get_displayname() ?></div>
+        <div class="menu_button"><i class="fas fa-bars"></i></div>
+        <div class="menu">
+<!--            <div class="button">-->
+<!--                <a>home</a>-->
+<!--            </div>-->
+<!--            <div class="button">-->
+<!--                <a>button2</a>-->
+<!--            </div>-->
+            <div class="button">
+                <a href="php/logout.php">Logout</a>
+                <i class="fas fa-sign-out-alt"></i></div>
+        </div>
     </nav>
     <div class="body"></div>
 </div>

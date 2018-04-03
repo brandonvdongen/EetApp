@@ -1,4 +1,71 @@
-nav .menu_button{
+/* body */
+body{
+    background-color:darkorange;
+}
+
+
+/* NAV */
+nav{
+    display: grid;
     background-color: orange;
     height:50px;
+    grid-template-columns:1fr 50px;
+    grid-template-rows: 50px auto;
+    font-family: arial, sans-serif;
+}
+
+nav .nametag{
+    padding:10px;
+    font-size:30px;
+}
+
+nav .menu_button {
+    font-size:30px;
+    padding:10px;
+    box-sizing:  border-box;
+    text-align:  center;
+}
+
+nav .menu_button:hover{
+    background-color:orange;
+}
+
+nav .menu_button + .menu{
+    visibility:hidden;
+    grid-column: 1/3;
+}
+
+nav .menu_button:hover + .menu{
+    visibility:visible;
+}
+
+nav .menu:hover {
+    visibility:visible !important;
+}
+
+
+nav .menu_button + .menu .button:nth-child(odd){
+    background-color: #ffbe00;
+}
+
+nav .menu_button + .menu .button:nth-child(even){
+    background-color:orange;
+}
+
+nav .menu_button + .menu .button{
+    height:50px;
+    display:grid;
+    grid-template-columns:1fr 50px;
+}
+
+nav .menu_button + .menu .button a{
+    font-size:30px;
+    padding:10px;
+    text-decoration:none;
+    color:black;
+}
+
+nav .menu_button + .menu svg{
+    font-size:30px;
+    padding:10px;
 }
